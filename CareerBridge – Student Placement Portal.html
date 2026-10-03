@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>CareerBridge – Student Placement Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2240;--mu:#6b7390;--pr:#4f46e5;--pr2:#7c3aed;--ok:#16a34a;--no:#dc2626;--bd:#e3e7f2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1226;--card:#1a1e3a;--tx:#eef0ff;--mu:#9aa1c7;--bd:#2b3060}}
+:root[data-theme=dark]{--bg:#0f1226;--card:#1a1e3a;--tx:#eef0ff;--mu:#9aa1c7;--bd:#2b3060}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.logo{font-weight:800;font-size:20px;cursor:pointer;background:linear-gradient(90deg,var(--pr),var(--pr2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero{text-align:center;padding:60px 20px 30px;background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff}
+.hero h1{margin:0 0 10px;font-size:clamp(28px,5vw,46px)}.hero p{margin:0 auto;max-width:560px;opacity:.9}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
+.big{text-align:center;cursor:pointer;transition:.2s}.big:hover{transform:translateY(-4px);box-shadow:0 10px 26px rgba(79,70,229,.2)}
+.big .ic{font-size:42px}.big h3{margin:8px 0 4px}.big p{color:var(--mu);margin:0 0 14px;font-size:14px}
+button,.btn{background:linear-gradient(90deg,var(--pr),var(--pr2));color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:600;cursor:pointer;font-size:14px}
+button.g{background:transparent;color:var(--pr);border:1px solid var(--pr)}button.ok{background:var(--ok)}button.no{background:var(--no)}button:disabled{opacity:.5;cursor:default}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit;margin:5px 0 12px}
+label{font-size:13px;color:var(--mu);font-weight:600}
+.narrow{max-width:420px;margin:30px auto}h2{margin:0 0 14px}
+.tag{display:inline-block;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:3px 10px;font-size:12px;margin:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mu{color:var(--mu);font-size:14px}
+.badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#fff}.Pending{background:#d97706}.Accepted{background:var(--ok)}.Rejected{background:var(--no)}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.msg{color:var(--no);font-size:13px;min-height:18px}
+a{color:var(--pr)}
+</style></head><body>
+<header><div class="logo" onclick="go('home')">🎓 CareerBridge</div><div id="nav"></div></header>
+<div id="app"></div>
+<script>
+const $=s=>document.querySelector(s);
+const ADMIN={u:'sagarkakde872@gmail.com',p:'Sagar@2006'};
+let mem={};
+const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return k in mem?mem[k]:d}};
+const sv=(k,v)=>{mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let users=ld('users',[]),companies=ld('companies',[
+ {id:1,name:'TechNova Pvt Ltd',salary:'6 LPA',skills:'Java, SQL, React',location:'Pune'},
+ {id:2,name:'DataWave Analytics',salary:'8 LPA',skills:'Python, ML, Power BI',location:'Nagpur'}]),
+ apps=ld('apps',[]),me=ld('me',null),admin=false;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function nav(){let h='';if(me||admin)h=`<span class="mu">${admin?'Admin':esc(me.name)} </span><button class="g" onclick="logout()">Logout</button>`;$('#nav').innerHTML=h}
+function logout(){me=null;admin=false;sv('me',null);go('home')}
+function go(v){nav();const f=V[v];$('#app').innerHTML=f();window.scrollTo(0,0)}
+const V={
+home:()=>`<div class="hero"><h1>Your Career Starts Here</h1><p>One portal for students, placement cell and recruiters — apply for jobs and internships, track every application.</p></div>
+<div class="wrap"><div class="grid">
+<div class="card big" onclick="go('sauth')"><div class="ic">🧑‍🎓</div><h3>Student Login</h3><p>Create profile, apply to companies</p><button>Student Login</button></div>
+<div class="card big" onclick="go('alogin')"><div class="ic">🛡️</div><h3>Admin Login</h3><p>Review applications, add companies</p><button>Admin Login</button></div>
+<div class="card big" onclick="go('companies')"><div class="ic">🏢</div><h3>Company View</h3><p>See all companies in the portal</p><button>Company View</button></div></div></div>`,
+sauth:()=>`<div class="wrap"><div class="card narrow"><div class="tabs"><button id="t1" onclick="tab(1)">Login</button><button id="t2" class="g" onclick="tab(2)">Create Account</button></div>
+<div id="nmw" style="display:none"><label>Name</label><input id="n"></div>
+<label>Email ID</label><input id="e" type="email"><label>Password</label><input id="p" type="password">
+<div class="msg" id="m"></div><button id="go" onclick="sAuth()">Login</button></div></div>`,
+alogin:()=>`<div class="wrap"><div class="card narrow"><h2>🛡️ Admin Login</h2><label>Username</label><input id="au"><label>Password</label><input id="ap" type="password">
+<div class="msg" id="m"></div><button onclick="aAuth()">Login</button></div></div>`,
+profile:()=>{const x=me;return `<div class="wrap"><h2>My Profile</h2><div class="grid"><div class="card"><label>Full Name</label><input id="pn" value="${esc(x.name)}">
+<label>Email</label><input value="${esc(x.email)}" disabled><label>Phone Number</label><input id="pp" value="${esc(x.phone)}">
+<label>Skills (comma separated)</label><input id="ps" value="${esc(x.skills)}">
+<label>Resume</label><input type="file" id="pr" accept=".pdf,.doc,.docx"><div class="mu" id="rn">${x.resume?'📄 '+esc(x.resume):'No resume added'}</div><br>
+<button onclick="saveP()">Save Profile</button> <span class="mu" id="ps2"></span></div>
+<div class="card"><h3 style="margin-top:0">Social Media Links</h3><div class="row"><input id="sl" placeholder="https://linkedin.com/in/you" style="flex:1;margin:0"><button onclick="addL()">Add</button></div><br>
+${(x.links||[]).map((l,i)=>`<div class="row" style="margin-bottom:6px"><a href="${esc(l)}" target="_blank" rel="noopener">🔗 ${esc(l)}</a><button class="g" onclick="delL(${i})">✕</button></div>`).join('')||'<span class="mu">No links yet</span>'}</div></div>
+<br><div class="row"><button onclick="go('jobs')">Browse Companies & Apply →</button></div></div>`},
+jobs:()=>{const mine=apps.filter(a=>a.email==me.email);return `<div class="wrap"><div class="row" style="justify-content:space-between"><h2>Companies Hiring</h2><button class="g" onclick="go('profile')">← My Profile</button></div>
+<div class="grid">${companies.map(c=>`<div class="card"><h3 style="margin:0 0 6px">🏢 ${esc(c.name)}</h3><div class="mu">📍 ${esc(c.location)} · 💰 ${esc(c.salary)}</div><p>${c.skills.split(',').map(s=>`<span class="tag">${esc(s.trim())}</span>`).join('')}</p>
+<div class="row"><button onclick="apply(${c.id},'Job')">Apply Job</button><button class="g" onclick="apply(${c.id},'Internship')">Apply Internship</button></div></div>`).join('')||'<p class="mu">No companies yet.</p>'}</div>
+<h2 style="margin-top:28px">My Applications</h2><div class="card tbl"><table><tr><th>Company</th><th>Type</th><th>Status</th></tr>${mine.map(a=>`<tr><td>${esc(a.company)}</td><td>${a.type}</td><td><span class="badge ${a.status}">${a.status}</span></td></tr>`).join('')||'<tr><td colspan=3 class="mu">Nothing applied yet</td></tr>'}</table></div></div>`},
+admin:()=>`<div class="wrap"><h2>Admin Dashboard</h2><div class="card" style="margin-bottom:18px"><h3 style="margin-top:0">➕ Add Company</h3><div class="grid" style="gap:0 14px">
+<div><label>Company Name</label><input id="cn"></div><div><label>Salary</label><input id="cs" placeholder="e.g. 6 LPA"></div>
+<div><label>Skills</label><input id="ck" placeholder="Java, SQL"></div><div><label>Location</label><input id="cl"></div></div>
+<div class="msg" id="m"></div><button onclick="addC()">Add Company</button></div>
+<div class="card tbl"><h3 style="margin-top:0">All Student Applications (${apps.length})</h3><table><tr><th>Student</th><th>Email</th><th>Phone</th><th>Skills</th><th>Resume</th><th>Company</th><th>Type</th><th>Status</th><th>Decision</th></tr>
+${apps.map((a,i)=>`<tr><td>${esc(a.name)}</td><td>${esc(a.email)}</td><td>${esc(a.phone)||'-'}</td><td>${esc(a.skills)||'-'}</td><td>${esc(a.resume)||'-'}</td><td>${esc(a.company)}</td><td>${a.type}</td><td><span class="badge ${a.status}">${a.status}</span></td>
+<td><button class="ok" onclick="dec(${i},'Accepted')">Accept</button> <button class="no" onclick="dec(${i},'Rejected')">Reject</button></td></tr>`).join('')||'<tr><td colspan=9 class="mu">No applications yet</td></tr>'}</table></div></div>`,
+companies:()=>`<div class="wrap"><div class="row" style="justify-content:space-between"><h2>All Companies (${companies.length})</h2><button class="g" onclick="go('home')">← Home</button></div>
+<div class="grid">${companies.map(c=>`<div class="card"><h3 style="margin:0 0 6px">🏢 ${esc(c.name)}</h3><div class="mu">📍 ${esc(c.location)}</div><div style="margin:8px 0"><b>💰 ${esc(c.salary)}</b></div>${c.skills.split(',').map(s=>`<span class="tag">${esc(s.trim())}</span>`).join('')}</div>`).join('')}</div></div>`
+};
+function tab(n){$('#nmw').style.display=n==2?'block':'none';$('#go').textContent=n==2?'Create Account':'Login';$('#go').dataset.m=n;$('#t1').className=n==1?'':'g';$('#t2').className=n==2?'':'g';$('#m').textContent=''}
+function sAuth(){const reg=$('#go').dataset.m==2,e=$('#e').value.trim().toLowerCase(),p=$('#p').value,m=$('#m');
+ if(!e||!p)return m.textContent='Enter email and password.';
+ if(reg){const n=$('#n').value.trim();if(!n)return m.textContent='Enter your name.';if(users.find(u=>u.email==e))return m.textContent='Account already exists.';
+  const u={name:n,email:e,pass:p,phone:'',skills:'',resume:'',links:[]};users.push(u);sv('users',users);me=u}
+ else{const u=users.find(u=>u.email==e&&u.pass==p);if(!u)return m.textContent='Wrong email or password.';me=u}
+ sv('me',me);go('profile')}
+function aAuth(){if($('#au').value.trim()==ADMIN.u&&$('#ap').value==ADMIN.p){admin=true;go('admin')}else $('#m').textContent='Invalid admin credentials.'}
+function persist(){const i=users.findIndex(u=>u.email==me.email);if(i>=0)users[i]=me;sv('users',users);sv('me',me)}
+function saveP(){me.name=$('#pn').value;me.phone=$('#pp').value;me.skills=$('#ps').value;const f=$('#pr').files[0];if(f)me.resume=f.name;persist();nav();go('profile');$('#ps2').textContent='✅ Saved'}
+function addL(){let l=$('#sl').value.trim();if(!l)return;if(!/^https?:\/\//.test(l))l='https://'+l;saveKeep();(me.links=me.links||[]).push(l);persist();go('profile')}
+function delL(i){saveKeep();me.links.splice(i,1);persist();go('profile')}
+function saveKeep(){me.name=$('#pn').value;me.phone=$('#pp').value;me.skills=$('#ps').value;const f=$('#pr').files[0];if(f)me.resume=f.name}
+function apply(id,t){const c=companies.find(c=>c.id==id);if(apps.find(a=>a.email==me.email&&a.company==c.name&&a.type==t))return alert('Already applied.');
+ apps.push({name:me.name,email:me.email,phone:me.phone,skills:me.skills,resume:me.resume,company:c.name,type:t,status:'Pending'});sv('apps',apps);go('jobs')}
+function dec(i,s){apps[i].status=s;sv('apps',apps);go('admin')}
+function addC(){const n=$('#cn').value.trim(),s=$('#cs').value.trim(),k=$('#ck').value.trim(),l=$('#cl').value.trim();
+ if(!n||!s||!k||!l)return $('#m').textContent='Fill all four fields.';companies.push({id:Date.now(),name:n,salary:s,skills:k,location:l});sv('companies',companies);go('admin')}
+go(admin?'admin':me?'profile':'home');
+</script></body></html>
